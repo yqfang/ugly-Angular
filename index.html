@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>angular-skeleton</title>
+    
+</head>
+    <body ng-app="myApp">
+        <table>
+            <thead>
+                <tr>
+                <th ng-repeat="head in groupedTable.head">{{head}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="group in groupedTable.body" ng-init="group.show=true">
+                    <td><button ng-click="group.show = !group.show">click</button></td>
+                    <td>{{group.groupName}}</td>
+                </tr>
+                <tr ng-show="group.show" ng-repeat="row in group.groupContent" ng-repeat-end>
+                    <td>{{row.col1}}</td>
+                    <td>{{row.col2}}</td>
+                    <td>{{row.col3}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        
+
+        <script src="./angular.js"></script>
+        <script>
+            angular.module("myApp", [])
+                .run(["$rootScope", function($rootScope){
+                    $rootScope.groupedTable = {
+                        head: ["col1", "col2", "col3"],
+                        body: [{groupName: "group1",
+                                groupContent: [{col1: "group1-row1-col1",
+                                              col2: "group1-row1-col2",
+                                              col3: "group1-row1-col3"
+                                             },
+                                             {col1: "group1-row2-col1",
+                                              col2: "group1-row2-col2",
+                                              col3: "group1-row2-col3"
+                                             }]}, 
+                               {groupName: "group2",
+                                groupContent: [{col1: "group2-row1-col1",
+                                              col2: "group2-row1-col2",
+                                              col3: "group2-row1-col3"
+                                             },
+                                             {col1: "group2-row2-col1",
+                                              col2: "group2-row2-col2",
+                                              col3: "group2-row2-col3"
+                                             }]}
+                              ]}
+                }])
+        </script>
+    </body>
+</html>
