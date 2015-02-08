@@ -7,12 +7,14 @@
     
 </head>
     <body ng-app="myApp">
-        <my-grouped-table></my-grouped-table>
+        <my-grouped-table data="groupedTable1"></my-grouped-table>
+        <hr />
+        <my-grouped-table data="groupedTable2"></my-grouped-table>
         <script src="./angular.js"></script>
         <script>
             angular.module("myApp", [])
                 .run(["$rootScope", function($rootScope){
-                    $rootScope.groupedTable = {
+                    $rootScope.groupedTable1 = {
                         head: ["col1", "col2", "col3"],
                         body: [{groupName: "group1",
                                 groupContent: [{col1: "group1-row1-col1",
@@ -33,11 +35,37 @@
                                               col3: "group2-row2-col3"
                                              }]}
                               ]}
+                    $rootScope.groupedTable2 = {
+                        head: ["col1", "col2", "col3"],
+                        body: [{groupName: "group3",
+                                groupContent: [{col1: "group3-row1-col1",
+                                              col2: "group3-row1-col2",
+                                              col3: "group3-row1-col3"
+                                             },
+                                             {col1: "group3-row2-col1",
+                                              col2: "group3-row2-col2",
+                                              col3: "group3-row2-col3"
+                                             }]}, 
+                               {groupName: "group4",
+                                groupContent: [{col1: "group4-row1-col1",
+                                              col2: "group4-row1-col2",
+                                              col3: "group4-row1-col3"
+                                             },
+                                             {col1: "group4-row2-col1",
+                                              col2: "group4-row2-col2",
+                                              col3: "group4-row2-col3"
+                                             }]}
+                              ]}
                 }])
               .directive("myGroupedTable", [function(){
                   return {
                     restrict: "E",
-                    templateUrl: './my-grouped-table-tpl.html'
+                    scope: true,
+                    templateUrl: './my-grouped-table-tpl.html',
+                    controller: ['$scope', '$attrs', function($scope, $attrs){
+                      this.mygroupedTable = $scope.$eval($attrs.data);
+                    }],
+                    controllerAs: "table"
                   }
               }])
         </script>
