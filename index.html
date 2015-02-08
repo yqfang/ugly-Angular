@@ -7,27 +7,7 @@
     
 </head>
     <body ng-app="myApp">
-        <table>
-            <thead>
-                <tr>
-                <th ng-repeat="head in groupedTable.head">{{head}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat-start="group in groupedTable.body" ng-init="group.show=true">
-                    <td><button ng-click="group.show = !group.show">click</button></td>
-                    <td>{{group.groupName}}</td>
-                </tr>
-                <tr ng-show="group.show" ng-repeat="row in group.groupContent" ng-repeat-end>
-                    <td>{{row.col1}}</td>
-                    <td>{{row.col2}}</td>
-                    <td>{{row.col3}}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        
-
+        <my-grouped-table></my-grouped-table>
         <script src="./angular.js"></script>
         <script>
             angular.module("myApp", [])
@@ -54,6 +34,12 @@
                                              }]}
                               ]}
                 }])
+              .directive("myGroupedTable", [function(){
+                  return {
+                    restrict: "E",
+                    templateUrl: './my-grouped-table-tpl.html'
+                  }
+              }])
         </script>
     </body>
 </html>
