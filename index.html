@@ -8,91 +8,100 @@
 </head>
 
 <body ng-app="myApp">
-<!-- <table-page> -->
-    <my-grouped-table></my-grouped-table>
-<!-- </table-page> -->
+
+    <my-grouped-table-search-form></my-grouped-table-search-form>
+    <my-grouped-table key="{{myGroupedTableSearchForm.serviceId}}"></my-grouped-table>
+
     
+
+
+
+
+
+
+
+
+
+
+
+
     <script src="./angular.js"></script>
     <script>
     angular.module("myApp", [])
         .factory("groupedTableService", [function() {
-          var self;
+            var self;
             return self = {
-                deepCopy: function(source){
-                  var dest = {};
-                  angular.copy(source, dest)
-                  return dest;
+                deepCopy: function(source) {
+                    return angular.copy(source);
                 },
-                newInstance: function(){  
-                  return self.deepCopy({
-                        head: ["emptyTable"],
+                newInstance: function() {
+                    return self.deepCopy({
+                        head: ["结果为空"],
                         body: [{
-                            groupName: "noGroup",
-                            groupContent: [{
-                                emptyTable: "noContent",
-                            }]
-                        }]
+                            groupName: "",
+                            groupContent: []
+                        }],
+                        isEmpty: true
                     })
                 },
                 loadData: function(dataKey) {
-                  debugger
-                  if('undefined' == dataKey || angular.equals("")){
-                    return self.newInstance();
-                  }
-                  if(dataKey == '1111')
-                  return self.deepCopy({
-                        head: ["col1", "col2", "col3"],
-                        body: [{
-                            groupName: "group1",
-                            groupContent: [{
-                                col1: "group1-row1-col1",
-                                col2: "group1-row1-col2",
-                                col3: "group1-row1-col3"
+                    if (dataKey == '1111')
+                        return self.deepCopy({
+                            head: ["col1", "col2", "col3"],
+                            body: [{
+                                groupName: "group1",
+                                groupContent: [{
+                                    col1: "group1-row1-col1",
+                                    col2: "group1-row1-col2",
+                                    col3: "group1-row1-col3"
+                                }, {
+                                    col1: "group1-row2-col1",
+                                    col2: "group1-row2-col2",
+                                    col3: "group1-row2-col3"
+                                }]
                             }, {
-                                col1: "group1-row2-col1",
-                                col2: "group1-row2-col2",
-                                col3: "group1-row2-col3"
+                                groupName: "group2",
+                                groupContent: [{
+                                    col1: "group2-row1-col1",
+                                    col2: "group2-row1-col2",
+                                    col3: "group2-row1-col3"
+                                }, {
+                                    col1: "group2-row2-col1",
+                                    col2: "group2-row2-col2",
+                                    col3: "group2-row2-col3"
+                                }]
                             }]
-                        }, {
-                            groupName: "group2",
-                            groupContent: [{
-                                col1: "group2-row1-col1",
-                                col2: "group2-row1-col2",
-                                col3: "group2-row1-col3"
+                        })
+                    else if (dataKey == '2222')
+                        return self.deepCopy({
+                            head: ["col1", "col2", "col3"],
+                            body: [{
+                                groupName: "group4",
+                                groupContent: [{
+                                    col1: "group1-row1-col1",
+                                    col2: "group1-row1-col2",
+                                    col3: "group1-row1-col3"
+                                }, {
+                                    col1: "group1-row2-col1",
+                                    col2: "group1-row2-col2",
+                                    col3: "group1-row2-col3"
+                                }]
                             }, {
-                                col1: "group2-row2-col1",
-                                col2: "group2-row2-col2",
-                                col3: "group2-row2-col3"
+                                groupName: "group5",
+                                groupContent: [{
+                                    col1: "group2-row1-col1",
+                                    col2: "group2-row1-col2",
+                                    col3: "group2-row1-col3"
+                                }, {
+                                    col1: "group2-row2-col1",
+                                    col2: "group2-row2-col2",
+                                    col3: "group2-row2-col3"
+                                }]
                             }]
-                        }]
-                    })
-                  if(dataKey == '2222')
-                  return self.deepCopy({
-                        head: ["col1", "col2", "col3"],
-                        body: [{
-                            groupName: "group4",
-                            groupContent: [{
-                                col1: "group1-row1-col1",
-                                col2: "group1-row1-col2",
-                                col3: "group1-row1-col3"
-                            }, {
-                                col1: "group1-row2-col1",
-                                col2: "group1-row2-col2",
-                                col3: "group1-row2-col3"
-                            }]
-                        }, {
-                            groupName: "group5",
-                            groupContent: [{
-                                col1: "group2-row1-col1",
-                                col2: "group2-row1-col2",
-                                col3: "group2-row1-col3"
-                            }, {
-                                col1: "group2-row2-col1",
-                                col2: "group2-row2-col2",
-                                col3: "group2-row2-col3"
-                            }]
-                        }]
-                    })
+                        })
+                    else{
+                        return self.newInstance();
+                    }
                 }
             }
         }])
@@ -100,35 +109,38 @@
             return {
                 restrict: "E",
                 scope: {
-                  key: '@'
+                    key: '@'
                 },
                 templateUrl: './my-grouped-table-tpl.html',
-                controller: ['$scope', 'groupedTableService', function($scope, groupedTableService) {
-                    var table = this;
-                    table.key = $scope.key
-                    this.reload = function(key){
-                    table.data = groupedTableService.loadData(key);
-                  }
-              }],
-                controllerAs: "table",
+                controller: ['groupedTableService', function(groupedTableService) {
+                    var vm = this;
+                    vm.reload = function(key) {
+                        vm.data = groupedTableService.loadData(key);
+                    }
+                }],
+                controllerAs: "myGroupedTable",
                 require: 'myGroupedTable',
-                link: function(scope, element, attr, table){
-                  table.reload(scope.key);
+                link: function(scope, element, attr, myGroupedTableCtrl){
+                    scope.$watch('key', function(newV, oldV) {
+                        myGroupedTableCtrl.reload(newV);
+                    })
                 }
             }
         }])
-        // .directive("tablePage", [function(){
-        //   return {
-        //     restrict: "E",
-        //     template: '<input ng-model="page.serviceId"/><<button ng-click="page.searchById(page.serviceId)">搜索服务单</button>',
-        //     controller: [function(){
-        //       page.searchById = function(id){
-        //         page.key = 
-        //       }
-        //     }],
-        //     controllerAs: page
-        //   }
-        // }])
+        .directive("myGroupedTableSearchForm", [function() {
+            return {
+                restrict: "E",
+                template: '<input ng-model="myGroupedTableSearchForm.input"/><button ng-click="myGroupedTableSearchForm.searchById(myGroupedTableSearchForm.input)">搜索服务单</button>',
+                controller: ['$scope', function($scope) {
+                    var vm = this;
+                    vm.input = "";
+                    vm.searchById = function(id) {
+                        vm.serviceId = id;
+                    }
+                }],
+                controllerAs: 'myGroupedTableSearchForm'
+            }
+        }])
     </script>
 </body>
 
