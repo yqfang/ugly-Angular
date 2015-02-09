@@ -10,6 +10,7 @@
                 <button ng-click="group.show = !group.show">click</button>
             </td>
             <td>{{group.groupName}}</td>
+            <td>table Key: {{table.key}}</td>
         </tr>
         <tr ng-show="group.show" ng-repeat="row in group.groupContent" ng-repeat-end>
             <td>{{row.col1}}</td>

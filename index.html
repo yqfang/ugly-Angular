@@ -8,20 +8,38 @@
 </head>
 
 <body ng-app="myApp">
-    <my-grouped-table key="1111"></my-grouped-table>
-    <hr />
-    <my-grouped-table key="1111"></my-grouped-table>
+<!-- <table-page> -->
+    <my-grouped-table></my-grouped-table>
+<!-- </table-page> -->
+    
     <script src="./angular.js"></script>
     <script>
     angular.module("myApp", [])
         .factory("groupedTableService", [function() {
+          var self;
             return self = {
                 deepCopy: function(source){
                   var dest = {};
                   angular.copy(source, dest)
                   return dest;
                 },
+                newInstance: function(){  
+                  return self.deepCopy({
+                        head: ["emptyTable"],
+                        body: [{
+                            groupName: "noGroup",
+                            groupContent: [{
+                                emptyTable: "noContent",
+                            }]
+                        }]
+                    })
+                },
                 loadData: function(dataKey) {
+                  debugger
+                  if('undefined' == dataKey || angular.equals("")){
+                    return self.newInstance();
+                  }
+                  if(dataKey == '1111')
                   return self.deepCopy({
                         head: ["col1", "col2", "col3"],
                         body: [{
@@ -48,6 +66,33 @@
                             }]
                         }]
                     })
+                  if(dataKey == '2222')
+                  return self.deepCopy({
+                        head: ["col1", "col2", "col3"],
+                        body: [{
+                            groupName: "group4",
+                            groupContent: [{
+                                col1: "group1-row1-col1",
+                                col2: "group1-row1-col2",
+                                col3: "group1-row1-col3"
+                            }, {
+                                col1: "group1-row2-col1",
+                                col2: "group1-row2-col2",
+                                col3: "group1-row2-col3"
+                            }]
+                        }, {
+                            groupName: "group5",
+                            groupContent: [{
+                                col1: "group2-row1-col1",
+                                col2: "group2-row1-col2",
+                                col3: "group2-row1-col3"
+                            }, {
+                                col1: "group2-row2-col1",
+                                col2: "group2-row2-col2",
+                                col3: "group2-row2-col3"
+                            }]
+                        }]
+                    })
                 }
             }
         }])
@@ -59,11 +104,31 @@
                 },
                 templateUrl: './my-grouped-table-tpl.html',
                 controller: ['$scope', 'groupedTableService', function($scope, groupedTableService) {
-                    this.data = groupedTableService.loadData($scope.key)
-                }],
+                    var table = this;
+                    table.key = $scope.key
+                    this.reload = function(key){
+                    table.data = groupedTableService.loadData(key);
+                  }
+              }],
                 controllerAs: "table",
+                require: 'myGroupedTable',
+                link: function(scope, element, attr, table){
+                  table.reload(scope.key);
+                }
             }
         }])
+        // .directive("tablePage", [function(){
+        //   return {
+        //     restrict: "E",
+        //     template: '<input ng-model="page.serviceId"/><<button ng-click="page.searchById(page.serviceId)">搜索服务单</button>',
+        //     controller: [function(){
+        //       page.searchById = function(id){
+        //         page.key = 
+        //       }
+        //     }],
+        //     controllerAs: page
+        //   }
+        // }])
     </script>
 </body>
 
