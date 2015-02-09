@@ -1,11 +1,11 @@
 <table>
     <thead>
         <tr>
-            <th ng-repeat="head in table.mygroupedTable.head">{{head}}</th>
+            <th ng-repeat="head in table.data.head">{{head}}</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat-start="group in table.mygroupedTable.body" ng-init="group.show=true">
+        <tr ng-repeat-start="group in table.data.body" ng-init="group.show=true">
             <td>
                 <button ng-click="group.show = !group.show">click</button>
             </td>
