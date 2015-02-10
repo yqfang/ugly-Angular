@@ -1,0 +1,32 @@
+# directifiedDemo
+尝试指令化一个简单的AngularJs模块
+
+1.recent search 模块 入口是 recentSearchController(as recentSearchCtrl)
+    #recentSearchCtrl 定义模块的数据和行为：
+        data: 查询所得的数据，
+        search: 查询记录的代理方法，
+        ##为什么用代理？
+            一方面查询行为的触发者和查询条件都不在recentSearchCtrl中
+            另一方面把模块行为放在模块入口有助于降低模块间的耦合
+
+2.recent-search-page是一个wrapper directive
+  # wrapper directive 一般和模块入口（recentSearchCtrl）公用一个scope，但他们的Controller一般分开（为什么这么做后面解释）
+  ##为了更好的隔离两者scope的中变量冲突：两者都要用使用controllerAs来隔离scope命名空间
+  ###假设我们这里没用ControllerAs， 如果recentSearchCtrl和recent-search-page的Controller中都包含了data对象，由于两者公用scope，那么recent-search-page中的scope.data一定会把前者覆盖掉，如果两者都用了ControllerAs（比如as a和 as b）
+     那么data在scope命名空间中就会用scope.a.data和scope.b.data区分
+  ##那么既然wrapper directive 和模块入口Controller公用一个scope，为什么要把他们的Controller分开放呢？
+  ###首先他们都是search这个行为的代理（search行为的触发者是my-grouped-table-search-form指令，用户点击提交触发search的行为），这种代理模式在指令设计中很常见，简单介绍一下代理模式在本模块中的应用：
+            ###my-grouped-table-search-form把搜索行为代理给recent-search-page，然后recent-search-page再把搜索行为代理给recentSearchCtrl，recentSearchCtrl调用dataFactory去获得最终的数据data，然后my-grouped-table通过‘=’绑定刷新table
+            ###如果不使用代理，用户提交表单后my-grouped-table-search-form中的Controller直接注入dataFactory去获得数据，这样有很多弊端：
+            1.首先它降低了指令的可复用性，dataFactory中的loadData方法是业务相关的，*指令中注入过
+            多业务相关的service（比如dao方法）*会大大降低指令的可复用性，
+            2.所以把recent-search-page 的controller和 recentSearchCtrl区分开还是很有必要的：
+                recentSearchCtrl处理相关业务模型
+                recent-search-page的controller从代理那请求数据，并从代理哪里取得数据：
+                    recent-search-form中的link方法和recentSearchPage中的controller都在所这样的事情（把search的责任疯狂往外抛，search的结果疯狂地去取，囧）
+        ##作为一个wrapper directive，transclude 一定要设置为true， template中也要为模块Dom的布局承担一定的责任。
+
+3.my-grouped-table-search-form是一个isolate，我的理解是：凡是确定不会被require的指令最要都设置为isolate，模块化嘛。
+    #my-grouped-table-search-form中唯一要注意的就是link中的代理了，通过require ‘recentSearchPage’把所有的责任往上抛
+
+4.my-grouped-table 是一个可以共享的组件（component）， data是它唯一的数据接口，通过和recent-search-page‘=’绑定来动态呈现查询结果
