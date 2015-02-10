@@ -1,17 +1,16 @@
-<div class="col-xs-3 log-leftCt">
+<div class="col-xs-9 log-rightCt">
     <table>
         <thead>
             <tr>
-                <th ng-repeat="head in myGroupedTable.data.head">{{head}}</th>
+                <th ng-repeat="head in data.head">{{head}}</th>
             </tr>
         </thead>
-        <tbody ng-show="!myGroupedTable.data.isEmpty">
-            <tr ng-repeat-start="group in myGroupedTable.data.body" ng-init="group.show=true">
+        <tbody ng-show="!data.isEmpty">
+            <tr ng-repeat-start="group in data.body" ng-init="group.show=true">
                 <td>
                     <button ng-click="group.show = !group.show">click</button>
                 </td>
                 <td>{{group.groupName}}</td>
-                <td>myGroupedTable Key: {{key}}</td>
             </tr>
             <tr ng-show="group.show" ng-repeat="row in group.groupContent" ng-repeat-end>
                 <td>{{row.col1}}</td>

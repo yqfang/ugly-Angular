@@ -4,13 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <title>angular-skeleton</title>
-
 </head>
 
 <body ng-app="myApp">
     <recent-search-page>
         <my-grouped-table-search-form></my-grouped-table-search-form>
-        <my-grouped-table key="{{myGroupedTableSearchForm.serviceId}}"></my-grouped-table>
+        <my-grouped-table data="recentSearchPage.data"></my-grouped-table>
     </recent-search-page>
 
 
@@ -23,43 +22,46 @@
             return {
                 restrict: "E",
                 scope: {
-                    key: '@'
+                    data: '='
                 },
-                templateUrl: './my-grouped-table-tpl.html',
-                controller: ['dataFactory', function(dataFactory) {
-                    var vm = this;
-                    vm.reload = function(key) {
-                        vm.data = dataFactory.loadData(key);
-                    }
-                }],
-                controllerAs: "myGroupedTable",
-                require: 'myGroupedTable',
-                link: function(scope, element, attr, myGroupedTableCtrl){
-                    scope.$watch('key', function(newV, oldV) {
-                        myGroupedTableCtrl.reload(newV);
-                    })
-                }
+                templateUrl: './my-grouped-table-tpl.html'
             }
         }])
         .directive("myGroupedTableSearchForm", [function() {
             return {
                 restrict: "E",
-                template: '<input ng-model="myGroupedTableSearchForm.input"/><button ng-click="myGroupedTableSearchForm.searchById(myGroupedTableSearchForm.input)">搜索服务单</button>',
+                scope: {},
+                templateUrl: './my-grouped-table-search-form.html',
                 controller: ['$scope', function($scope) {
                     var vm = this;
-                    vm.input = "";
-                    vm.searchById = function(id) {
-                        vm.serviceId = id;
-                    }
+                    vm.form = {};
                 }],
-                controllerAs: 'myGroupedTableSearchForm'
+                controllerAs: 'myGroupedTableSearchForm',
+                require: ['^recentSearchPage', 'myGroupedTableSearchForm'],
+                link: function(scope, element, attr, ctrls){
+                    //proxy the search action to the upper directive
+                    var recentSearchPage = ctrls[0];
+                    var myGroupedTableSearchForm = ctrls[1];
+                    myGroupedTableSearchForm.search = function(){
+                        myGroupedTableSearchForm && recentSearchPage.search(myGroupedTableSearchForm.form);
+                    }
+
+                }
             }
         }])
         .directive("recentSearchPage", [function(){
             return {
                 restrict: "E",
                 templateUrl: './recent-search-page-tpl.html',
-                transclude: true
+                transclude: true,
+                controller: ['dataFactory', function(dataFactory){
+                    var vm = this;
+                    vm.search = function(form){
+                        console.info(form)
+                        vm.data = dataFactory.loadData(form)
+                    }
+                }],
+                controllerAs: 'recentSearchPage'
             }
         }])
     </script>

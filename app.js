@@ -26,8 +26,8 @@ angular.module("myApp", ['ngRoute'])
                         isEmpty: true
                     })
                 },
-                loadData: function(dataKey) {
-                    if (dataKey == '1111')
+                loadData: function(form) {
+                    if (form.serviceId != "")
                         return self.deepCopy({
                             head: ["col1", "col2", "col3"],
                             body: [{
@@ -54,33 +54,7 @@ angular.module("myApp", ['ngRoute'])
                                 }]
                             }]
                         })
-                    else if (dataKey == '2222')
-                        return self.deepCopy({
-                            head: ["col1", "col2", "col3"],
-                            body: [{
-                                groupName: "group4",
-                                groupContent: [{
-                                    col1: "group1-row1-col1",
-                                    col2: "group1-row1-col2",
-                                    col3: "group1-row1-col3"
-                                }, {
-                                    col1: "group1-row2-col1",
-                                    col2: "group1-row2-col2",
-                                    col3: "group1-row2-col3"
-                                }]
-                            }, {
-                                groupName: "group5",
-                                groupContent: [{
-                                    col1: "group2-row1-col1",
-                                    col2: "group2-row1-col2",
-                                    col3: "group2-row1-col3"
-                                }, {
-                                    col1: "group2-row2-col1",
-                                    col2: "group2-row2-col2",
-                                    col3: "group2-row2-col3"
-                                }]
-                            }]
-                        })
+                    
                     else{
                         return self.newInstance();
                     }
