@@ -7,64 +7,17 @@
 </head>
 
 <body ng-app="myApp">
-    <recent-search-page>
-        <my-grouped-table-search-form></my-grouped-table-search-form>
-        <my-grouped-table data="recentSearchPage.data"></my-grouped-table>
-    </recent-search-page>
 
+    <ng-view></ng-view>
 
-    <script src="./angular.js"></script>
-    <script src="./angular-route.js"></script>
+    <script src="./lib/angular.js"></script>
+    <script src="./lib/angular-route.js"></script>
     <script src="./app.js"></script>
-    <script>
-    angular.module("myApp")
-        .directive("myGroupedTable", [function() {
-            return {
-                restrict: "E",
-                scope: {
-                    data: '='
-                },
-                templateUrl: './my-grouped-table-tpl.html'
-            }
-        }])
-        .directive("myGroupedTableSearchForm", [function() {
-            return {
-                restrict: "E",
-                scope: {},
-                templateUrl: './my-grouped-table-search-form.html',
-                controller: ['$scope', function($scope) {
-                    var vm = this;
-                    vm.form = {};
-                }],
-                controllerAs: 'myGroupedTableSearchForm',
-                require: ['^recentSearchPage', 'myGroupedTableSearchForm'],
-                link: function(scope, element, attr, ctrls){
-                    //proxy the search action to the upper directive
-                    var recentSearchPage = ctrls[0];
-                    var myGroupedTableSearchForm = ctrls[1];
-                    myGroupedTableSearchForm.search = function(){
-                        myGroupedTableSearchForm && recentSearchPage.search(myGroupedTableSearchForm.form);
-                    }
-
-                }
-            }
-        }])
-        .directive("recentSearchPage", [function(){
-            return {
-                restrict: "E",
-                templateUrl: './recent-search-page-tpl.html',
-                transclude: true,
-                controller: ['dataFactory', function(dataFactory){
-                    var vm = this;
-                    vm.search = function(form){
-                        console.info(form)
-                        vm.data = dataFactory.loadData(form)
-                    }
-                }],
-                controllerAs: 'recentSearchPage'
-            }
-        }])
-    </script>
+    <script src="./modules/recentSearch/recentSearchCtrl.js"></script>
+    <script src="./modules/recentSearch/services/dataFactory.js"></script>
+    <script src="./modules/recentSearch/directives/recentSearchPage/recentSearchPage.js"></script>
+    <script src="./modules/recentSearch/directives/mySearchForm/my-search-form.js"></script>
+    <script src="./modules/recentSearch/directives/mySearchTable/myGroupedTable.js"></script>
 </body>
 
 </html>
