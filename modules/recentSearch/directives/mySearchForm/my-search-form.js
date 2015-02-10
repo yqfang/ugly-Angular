@@ -4,7 +4,7 @@ angular.module("myApp")
                 restrict: "E",
                 scope: {},
                 templateUrl: './modules/recentSearch/directives/mySearchForm/my-search-form-tpl.html',
-                controller: ['$scope', function($scope) {
+                controller: [function() {
                     var vm = this;
                     vm.form = {};
                 }],
@@ -17,7 +17,6 @@ angular.module("myApp")
                     myGroupedTableSearchForm.search = function(){
                         recentSearchPage && recentSearchPage.search(myGroupedTableSearchForm.form);
                     }
-
                 }
             }
         }])
