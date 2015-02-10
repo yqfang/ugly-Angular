@@ -2,9 +2,13 @@ angular.module("myApp")
         .directive("myGroupedTable", [function() {
             return {
                 restrict: "E",
-                scope: {
-                    data: '='
+                templateUrl: './modules/recentSearch/directives/mySearchTable/my-grouped-table-tpl.html',
+                controller: function(){
+                    this.data = {
+                        head: ["结果为空"],
+                        isEmpty: true
+                    }
                 },
-                templateUrl: './modules/recentSearch/directives/mySearchTable/my-grouped-table-tpl.html'
+                controllerAs: 'myGroupedTable'
             }
         }])

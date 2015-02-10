@@ -2,11 +2,11 @@
     <table>
         <thead>
             <tr>
-                <th ng-repeat="head in data.head">{{head}}</th>
+                <th ng-repeat="head in myGroupedTable.data.head">{{head}}</th>
             </tr>
         </thead>
-        <tbody ng-show="!data.isEmpty">
-            <tr ng-repeat-start="group in data.body" ng-init="group.show=true">
+        <tbody ng-show="!myGroupedTable.data.isEmpty">
+            <tr ng-repeat-start="group in myGroupedTable.data.body" ng-init="group.show=true">
                 <td>
                     <button ng-click="group.show = !group.show">click</button>
                 </td>

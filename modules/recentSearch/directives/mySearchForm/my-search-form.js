@@ -2,9 +2,8 @@ angular.module("myApp")
         .directive("myGroupedTableSearchForm", [function() {
             return {
                 restrict: "E",
-                scope: {},
                 templateUrl: './modules/recentSearch/directives/mySearchForm/my-search-form-tpl.html',
-                controller: [function() {
+                controller: [function(){
                     var vm = this;
                     vm.form = {};
                 }],
@@ -16,6 +15,7 @@ angular.module("myApp")
                     var myGroupedTableSearchForm = ctrls[1];
                     myGroupedTableSearchForm.search = function(){
                         recentSearchPage && recentSearchPage.search(myGroupedTableSearchForm.form);
+                        scope.myGroupedTable.data = recentSearchPage.data;//share infos between the same scope easily with the help of controllerAs object
                     }
                 }
             }
